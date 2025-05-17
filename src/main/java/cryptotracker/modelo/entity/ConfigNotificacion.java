@@ -1,6 +1,7 @@
 package cryptotracker.modelo.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 public class ConfigNotificacion {
@@ -9,10 +10,12 @@ public class ConfigNotificacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Boolean activo;
-    private String tipo;
+    private Boolean activo = true;
+    private String tipo; // DIARIO, SEMANAL, MENSUAL
+    private String email;
+    private BigDecimal umbral;
+    private String mensajePersonalizado;
 
-    // Relación uno a uno con usuario
     @OneToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
@@ -29,4 +32,13 @@ public class ConfigNotificacion {
 
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public BigDecimal getUmbral() { return umbral; }
+    public void setUmbral(BigDecimal umbral) { this.umbral = umbral; }
+
+    public String getMensajePersonalizado() { return mensajePersonalizado; }
+    public void setMensajePersonalizado(String mensajePersonalizado) { this.mensajePersonalizado = mensajePersonalizado; }
 }

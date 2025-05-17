@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -16,26 +15,31 @@ public class UsuarioController {
     @Autowired
     private UsuarioRepository usuarioRepo;
 
-    // DTO para crear usuario
     public static class UsuarioDTO {
         public String nombre;
         public String contraseña;
+        public String correo;
     }
 
-    // Endpoint para registrar usuario nuevo
     @PostMapping("/registrar")
     public ResponseEntity<String> registrarUsuario(@RequestBody UsuarioDTO datos) {
-        Optional<Usuario> existente = usuarioRepo.findByNombre(datos.nombre);
-
-        if (existente.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuario ya existe");
+        // Verificar si nombre o correo ya existen
+        if (usuarioRepo.findByNombre(datos.nombre).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El nombre de usuario ya existe");
+        }
+        
+        if (usuarioRepo.findByCorreo(datos.correo).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El correo electrónico ya está registrado");
         }
 
+        // Crear nuevo usuario
         Usuario nuevo = new Usuario();
         nuevo.setNombre(datos.nombre);
-        nuevo.setContraseña(datos.contraseña);
+        nuevo.setContraseña(datos.contraseña); 
+        nuevo.setCorreo(datos.correo);
+        
         usuarioRepo.save(nuevo);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado exitosamente");
     }
 }

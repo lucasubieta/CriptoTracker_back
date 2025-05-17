@@ -44,6 +44,7 @@ public class BilleteraController {
 
     // POST /api/billetera/{usuario}/agregar
     // Agrega o actualiza una cripto en la billetera
+    
     @PostMapping("/{nombreUsuario}/agregar")
     @Transactional
     public ResponseEntity<String> agregarCriptomoneda(
@@ -89,9 +90,6 @@ public class BilleteraController {
     }
     
     
-    
-    
-    
     // PUT /api/billetera/{usuario}/modificar
     @PutMapping("/{nombreUsuario}/modificar")
     @Transactional
@@ -122,10 +120,7 @@ public class BilleteraController {
 
         return ResponseEntity.ok("Criptomoneda modificada");
     }
-
-    
-    
-    
+          
     
     // DELETE /api/billetera/{usuario}/eliminar/{nombreCripto}
     @DeleteMapping("/{nombreUsuario}/eliminar/{nombreCripto}")
@@ -153,34 +148,6 @@ public class BilleteraController {
     }
 
     
-    //LLAMADA API DE COINMARKETCAP 
-    
-    @RestController
-    @RequestMapping("/api/cripto")
-    @CrossOrigin(origins = "http://localhost:4200") // Angular local
-    public class CriptoController {
-
-        @GetMapping("/precios")
-        public ResponseEntity<?> obtenerPreciosCriptos(
-        	    @RequestParam(defaultValue = "1") int start,
-        	    @RequestParam(defaultValue = "50") int limit,
-        	    @RequestParam(defaultValue = "EUR") String convert) {
-            String url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=1000&convert=USD";
-            String apiKey = "ea397464-a56e-442d-8ad2-74e9faeff22d";
-
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("X-CMC_PRO_API_KEY", apiKey);
-
-            HttpEntity<String> entity = new HttpEntity<>(headers);
-
-            try {
-                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-                return ResponseEntity.ok(response.getBody());
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al consumir CoinMarketCap");
-            }
-        }
-    }
+   
 
 }
